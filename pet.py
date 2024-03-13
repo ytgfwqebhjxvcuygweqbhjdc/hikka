@@ -1,7 +1,7 @@
 from .. import loader, utils
 from telethon.types import Message
 
-@loades.tds
+@loader.tds
 class PetMod(loader.Module):
     """Pet Module by tilted"""
     strings = { "name": "PetMod", "hello": "Hello World!"}
