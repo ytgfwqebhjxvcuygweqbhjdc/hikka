@@ -5,8 +5,7 @@ import random
 @loader.tds
 class PetMod(loader.Module):
     """Pet Module by tilted for моя любимая ритачян"""
-    strings = { "name": "PetMod", "newpet": "создаю нового пета..."}
-
+    strings = { "name": "PetMod"}
 
     @loader.command(ru_doc="<имя> - создает нового пиздюка (это удалит предыдущего пета)")
     async def newpet(self, message: Message):
@@ -28,10 +27,38 @@ class PetMod(loader.Module):
         self.set("invfood", 0)
         self.set("invwater", 0)
         self.set("invexppotion", 0)
+        self.set("invdiamonds", 0)
 
         random.seed(self.get("petname"))
 
         await utils.answer(message, self.get("petname") + " создан!")
+
+    @loader.command(ru_doc="<активность> выполнить активность")
+    async def petdo(self, message: Message):
+        activity_list = [
+            "mine",
+            "tv",
+            "pet"
+        ]
+
+        if message.message.split(" ")[1] == "mine":
+            amount = random.randint(1, 20)
+            self.set("invdiamonds", self.get("invdiamonds")+amount)
+            await utils.answer(message, f"твой пет поработал в шахте и принес тебе +{amount}💎")
+
+        if message.message.split(" ")[1] == "tv":
+            amount = random.randint(1, 5)
+            self.set("petenergy", self.get("petenergy")+amount)
+            await utils.answer(message, f"ты посмотрел телик с {self.get('petname')}\nвосстановлено {amount} ⚡")
+        
+        if message.message.split(" ")[1] == "pet":
+            amount = random.randint(1, 10)
+            self.set("petenergy", self.get("petenergy")+amount)
+            await utils.answer(message, f"ты патискал {self.get('petname')}\nвосстановлено {amount} ⚡")
+
+    @loader.command(ru_doc="список активностей для petdo")
+    async def activitylist(self, message: Message):
+        await utils.answer(message, f"⛏️ mine - отправить пета в шахту\n📺 tv - посмотреть телевизор\n😊 pet - потискать пета")
 
     @loader.command(ru_doc="<количество> напоить пета, использует 🥤")
     async def petdrink(self, message: Message):
@@ -46,7 +73,7 @@ class PetMod(loader.Module):
                 self.set("pethunger", self.get("petthirst")+int(message.message.split(' ')[1]))
                 await utils.answer(message, f"пет напоен! -{message.message.split(' ')[1]}🥤")
         else:
-            await utils.answer(message, f"""сейчас пет не хочет пить""")
+            await utils.answer(message, f"сейчас пет не хочет пить")
 
         if self.get("petthirst") > 100:
             self.set("petthirst", 100)
@@ -70,22 +97,17 @@ class PetMod(loader.Module):
             self.set("pethunger", 100)
 
     @loader.command(ru_doc="сгонять за едой")
-    async def getfood(self, message: Message):
-        amount = random.randint(1, 20)
-        self.set("invfood", self.get("invfood")+amount)
-        await utils.answer(message, f"+{amount}🍗")
-        
-    @loader.command(ru_doc="сгонять за водой")
-    async def getwater(self, message: Message):
-        amount = random.randint(1, 20)
-        self.set("invwater", self.get("invwater")+amount)
-        await utils.answer(message, f"+{amount}🥤")
+    async def petshop(self, message: Message):
+        amount1 = random.randint(1, 20)
+        amount2 = random.randint(1, 20)
+        self.set("invfood", self.get("invfood")+amount1)
+        self.set("invwater", self.get("invwater")+amount2)
+        await utils.answer(message, f"+{amount1}🍗\n+{amount2}🥤")
 
     @loader.command(ru_doc="инвентарь")
     async def petinv(self, message: Message):
-        self.set("invwater", self.get("invwater")+1)
-        await utils.answer(message, f"инвентарь:\n{self.get('invfood')} 🍗\n{self.get('invwater')} 🥤\n{self.get('invexppotion')} 🧪")
+        await utils.answer(message, f"инвентарь:\n{self.get('invfood')} 🍗\n{self.get('invwater')} 🥤\n{self.get('invexppotion')} 🧪\n{self.get('invdiamonds')} 💎")
 
     @loader.command(ru_doc="состояние ублюдка")
     async def petstatus(self, message: Message):
-        await utils.answer(message, f"""🪪 имя: {self.get('petname')}\n\n🧪 опыт: {self.get('petexp')}/50\n📊 уровень: {self.get('petlvl')}\n\n⚡ энергия: {self.get('petenergy')}\n🍗 голод: {self.get('pethunger')}/100\n💧 жажда: {self.get('petthirst')}/100""")
+        await utils.answer(message, f"""🪪 имя: `{self.get('petname')}`\n\n🧪 опыт: {self.get('petexp')}/50\n📊 уровень: {self.get('petlvl')}\n\n⚡ энергия: {self.get('petenergy')}\n🍗 голод: {self.get('pethunger')}/100\n💧 жажда: {self.get('petthirst')}/100""")
