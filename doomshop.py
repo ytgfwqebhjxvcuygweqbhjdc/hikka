@@ -17,7 +17,7 @@ class doomshop(loader.Module):
 
     @loader.command(en_doc="<target_username/this> - start bot")
     async def doomkill(self, message: Message):
-        """<@target/this> - start bot"""
+        """<target_username/this> - start bot"""
         global running
         global cooldown
         global lines
