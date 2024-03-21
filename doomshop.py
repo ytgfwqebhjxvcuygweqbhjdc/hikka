@@ -30,7 +30,7 @@ class doomshop(loader.Module):
             return
 
         if len(message.message.split(" ")) < 2:
-            await utils.answer(message, f"цель не указана! {self.get('l')}")
+            await utils.answer(message, f"цель не указана!")
             return
         
         await message.delete()
